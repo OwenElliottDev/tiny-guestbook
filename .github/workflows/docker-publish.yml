@@ -38,6 +38,8 @@ jobs:
           file: ./Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
+          build-args: |
+            TARGET=${TARGETPLATFORM}
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/tiny-guestbook:latest
             ${{ secrets.DOCKER_USERNAME }}/tiny-guestbook:${{ env.VERSION }}
