@@ -1,0 +1,11 @@
+services:
+  guestbook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tiny-guestbook-dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
