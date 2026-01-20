@@ -1,6 +1,6 @@
 services:
   guestbook:
-    image: your-docker-username/tiny-guestbook:latest
+    image: owenelliottdev/tiny-guestbook:latest
     container_name: tiny-guestbook
     ports:
       - "8080:8080"
