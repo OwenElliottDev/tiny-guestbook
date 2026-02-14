@@ -16,6 +16,11 @@ async function getGuestBookEntries(sortOrder) {
         const container = document.getElementById('entries-container');
         container.innerHTML = "";
 
+        if (data.entries.length === 0) {
+            container.innerHTML = '<p class="empty-state">No entries yet — be the first to sign!</p>';
+            return;
+        }
+
         data.entries.forEach(entry => {
             const card = document.createElement('div');
             card.className = 'entry-card';
@@ -23,7 +28,7 @@ async function getGuestBookEntries(sortOrder) {
             card.innerHTML = `
                 <div class="entry-left">
                     <p class="entry-name"><strong>${entry.name}</strong></p>
-                    <p class="entry-rating">Rating: ${entry.rating}</p>
+                    <p class="entry-rating">${'★'.repeat(entry.rating)}${'★'.repeat(5 - entry.rating).split('').map(() => '<span class="star-empty">★</span>').join('')}</p>
                     <p class="entry-date">${new Date(entry.posted_at_utc * 1000).toLocaleString()}</p>
                 </div>
                 <div class="entry-right">
