@@ -12,6 +12,10 @@ A lightweight, self-hosted guestbook app that lets guests leave star ratings and
 - SQLite database
 - Multi-architecture Docker images (x86_64 and ARM64)
 
+### A note on project goals
+
+The goal here is being simple and small. This is not intended for deployment where users are untrusted. There is no vetting of what is posted, no rate limiting, no accounts, no accountability, and the `DELETE` endpoint is unauthenticated so anyone on the network with the app can delete posts. This is really just meant to be a fun thing at home for friends and family.
+
 ## Quick Start
 
 Pull and run with Docker Compose:
