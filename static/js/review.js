@@ -27,7 +27,7 @@ form.addEventListener('submit', async (e) => {
         });
 
         if (response.ok) {
-            formStatus.textContent = 'Your review has been submitted! ✅';
+            formStatus.textContent = 'Your review has been submitted!';
             formStatus.style.color = 'green';
             form.reset();
             window.location.href = '/';

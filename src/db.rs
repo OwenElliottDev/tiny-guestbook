@@ -85,8 +85,9 @@ pub async fn get_entries(
         "#
     );
 
+    // order_by only comes from the fixed match above; user input goes through binds.
     // SQLite treats a negative LIMIT as "no limit"
-    let entries = sqlx::query_as::<_, PubGuestbookEntry>(&query)
+    let entries = sqlx::query_as::<_, PubGuestbookEntry>(sqlx::AssertSqlSafe(query))
         .bind(get_params.limit.unwrap_or(-1))
         .bind(get_params.offset.unwrap_or(0).max(0))
         .fetch_all(pool)
