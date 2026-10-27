@@ -38,6 +38,45 @@ docker compose up -d
 
 The guestbook will be available at `http://localhost:8080`. The SQLite database is stored in `/app/data`, so map that volume to persist data across restarts.
 
+## Colour Themes
+
+Set the `THEME` environment variable to pick a colour scheme:
+
+```yaml
+    environment:
+      - THEME=sage-linen
+```
+__Available Themes:__
++ `default`
++ `sage-linen`
++ `harbour-mist`
++ `lavender-dusk`
++ `eucalyptus`
++ `stone-fog`
++ `dusty-rose`
++ `matcha`
++ `denim-oat`
++ `seafoam`
++ `terracotta`
++ `moonlit`
++ `midnight-forest`
+
+To use your own theme, copy one of the files in `static/css/themes/`, change the colours, and mount it into the container:
+
+```yaml
+    volumes:
+      - ./data:/app/data
+      - ./my-theme.css:/app/static/css/themes/custom.css
+    environment:
+      - THEME=custom
+```
+
+Your custom CSS file can have any name but `THEME` must be the name you used minus the `.css`.
+
+### Advanced Styling
+
+A custom theme can contain any CSS, not just colour variables. Themes are loaded last; rules in your theme can override the main `static/css/style.css` sheet provided they use the same selector (or a more specific one).
+
 ## Building from Source
 
 ### Docker

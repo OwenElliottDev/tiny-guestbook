@@ -1,8 +1,13 @@
 use actix_web::{HttpResponse, web};
+use serde_json::json;
 use sqlx::SqlitePool;
 
 use crate::db::{delete_entry, entry_by_id, get_entries, insert_entry};
 use crate::models::{GetEntriesRequest, GuestbookEntryRequest, IdRequest};
+
+pub async fn health() -> HttpResponse {
+    HttpResponse::Ok().json(json!({"message": "Ok"}))
+}
 
 pub async fn sign_guestbook(
     pool: web::Data<SqlitePool>,

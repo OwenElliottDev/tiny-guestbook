@@ -10,6 +10,19 @@ async fn sign() -> Result<NamedFile> {
     Ok(NamedFile::open("./static/sign.html")?)
 }
 
+#[get("/theme.css")]
+async fn theme() -> Result<NamedFile> {
+    let name = std::env::var("THEME").unwrap_or_default();
+    let valid = !name.is_empty()
+        && name
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_');
+    let name = if valid { name.as_str() } else { "default" };
+    let file = NamedFile::open(format!("./static/css/themes/{name}.css"))
+        .or_else(|_| NamedFile::open("./static/css/themes/default.css"))?;
+    Ok(file)
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let pool = db::init_db().await;
@@ -17,6 +30,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(pool.clone()))
+            .route("/api/health", web::get().to(handlers::health))
             .route("/api/sign", web::post().to(handlers::sign_guestbook))
             .route(
                 "/api/entries",
@@ -25,6 +39,7 @@ async fn main() -> std::io::Result<()> {
             .route("/api/entry", web::get().to(handlers::get_entry_by_id))
             .route("/api/entry", web::delete().to(handlers::delete_entry_by_id))
             .service(sign)
+            .service(theme)
             .service(Files::new("/static", "./static"))
             .service(Files::new("/", "./static").index_file("index.html"))
     })
