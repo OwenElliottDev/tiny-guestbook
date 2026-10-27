@@ -1,0 +1,15 @@
+:root {
+    --accent: #9fb4e0;
+    --accent-dark: #839ccc;
+    --on-accent: #1a2133;
+    --text: #e4e8f1;
+    --text-soft: #bcc4d4;
+    --muted: #8a93a6;
+    --placeholder: #5f6779;
+    --border: #323a4d;
+    --bg: #161b26;
+    --surface: #1f2533;
+    --star: #f3c460;
+    --error: #ef7a6e;
+    --shadow: 0, 0, 0;
+}
