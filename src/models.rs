@@ -54,3 +54,6 @@ pub struct GetEntriesResponse {
 pub struct IdRequest {
     pub id: String,
 }
+
+#[derive(Clone)]
+pub struct ApiKey(pub Option<String>);

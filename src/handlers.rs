@@ -2,6 +2,7 @@ use actix_web::{HttpResponse, web};
 use serde_json::json;
 use sqlx::SqlitePool;
 
+use crate::auth::AdminAuth;
 use crate::db::{delete_entry, entry_by_id, get_entries, insert_entry};
 use crate::models::{GetEntriesRequest, GuestbookEntryRequest, IdRequest};
 
@@ -49,6 +50,7 @@ pub async fn get_entry_by_id(
 }
 
 pub async fn delete_entry_by_id(
+    _auth: AdminAuth,
     pool: web::Data<SqlitePool>,
     payload: web::Query<IdRequest>,
 ) -> HttpResponse {
