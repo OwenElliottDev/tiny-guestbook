@@ -100,7 +100,7 @@ pub async fn get_entries(
         }
     };
 
-    let entries = sqlx::query_as::<_, PubGuestbookEntry>(&query)
+    let entries = sqlx::query_as::<_, PubGuestbookEntry>(query)
         .fetch_all(pool)
         .await?;
 
