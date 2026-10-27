@@ -14,7 +14,7 @@ A lightweight, self-hosted guestbook app that lets guests leave star ratings and
 
 ### A note on project goals
 
-The goal here is being simple and small. This is not intended for deployment where users are untrusted. There is no vetting of what is posted, no rate limiting, no accounts, no accountability, and the `DELETE` endpoint is unauthenticated so anyone on the network with the app can delete posts. This is really just meant to be a fun thing at home for friends and family.
+The goal here is being simple and small. This is not intended for deployment where users are untrusted. There is no vetting of what is posted, no rate limiting, no accounts, and no accountability. By default the `DELETE` endpoint is unauthenticated, so anyone on the network with the app can delete posts. Set `GUESTBOOK_SECRET_KEY` to require an `Authorization: Bearer <key>` header on `DELETE` requests. This is really just meant to be a fun thing at home for friends and family.
 
 ## Quick Start
 

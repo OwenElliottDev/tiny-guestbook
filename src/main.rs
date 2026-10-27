@@ -1,6 +1,7 @@
 use actix_files::{Files, NamedFile};
 use actix_web::{App, HttpServer, Result, get, web};
 
+mod auth;
 mod db;
 mod handlers;
 mod models;
@@ -27,9 +28,17 @@ async fn theme() -> Result<NamedFile> {
 async fn main() -> std::io::Result<()> {
     let pool = db::init_db().await;
 
+    let api_key = std::env::var("GUESTBOOK_SECRET_KEY")
+        .ok()
+        .filter(|k| !k.is_empty());
+    if api_key.is_none() {
+        eprintln!("DELETE auth disabled: GUESTBOOK_SECRET_KEY not set");
+    }
+
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(pool.clone()))
+            .app_data(web::Data::new(models::ApiKey(api_key.clone())))
             .route("/api/health", web::get().to(handlers::health))
             .route("/api/sign", web::post().to(handlers::sign_guestbook))
             .route(
