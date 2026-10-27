@@ -5,9 +5,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-async function getGuestBookEntries(sortOrder) {
+const PAGE_SIZE = 32;
+
+let currentPage = 0;
+let currentSort = "datePostedDesc";
+
+async function getGuestBookEntries(sortOrder, page = 0) {
+    currentSort = sortOrder;
+    currentPage = page;
     try {
-        const url = `/api/entries?sort=${sortOrder}`;
+        const url = `/api/entries?sort=${sortOrder}&limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`;
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
@@ -15,6 +22,8 @@ async function getGuestBookEntries(sortOrder) {
 
         const container = document.getElementById('entries-container');
         container.innerHTML = "";
+
+        renderPagination(data.total);
 
         if (data.entries.length === 0) {
             container.innerHTML = '<p class="empty-state">No entries yet — be the first to sign!</p>';
@@ -70,5 +79,30 @@ async function getGuestBookEntries(sortOrder) {
         alert("Failed to fetch entries. See console for details.");
     }
 }
+
+function renderPagination(total) {
+    const pagination = document.getElementById('pagination');
+    const totalPages = Math.ceil(total / PAGE_SIZE);
+
+    if (totalPages <= 1) {
+        pagination.hidden = true;
+        return;
+    }
+    pagination.hidden = false;
+
+    const prev = document.getElementById('prev-page');
+    const next = document.getElementById('next-page');
+    prev.disabled = currentPage === 0;
+    next.disabled = currentPage >= totalPages - 1;
+    document.getElementById('page-info').textContent = `Page ${currentPage + 1} of ${totalPages}`;
+}
+
+function goToPage(page) {
+    getGuestBookEntries(currentSort, page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('prev-page').addEventListener('click', () => goToPage(currentPage - 1));
+document.getElementById('next-page').addEventListener('click', () => goToPage(currentPage + 1));
 
 getGuestBookEntries("datePostedDesc");
