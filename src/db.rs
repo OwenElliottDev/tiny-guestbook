@@ -69,42 +69,34 @@ pub async fn get_entries(
     pool: &SqlitePool,
     get_params: GetEntriesRequest,
 ) -> Result<GetEntriesResponse, sqlx::Error> {
-    let query = match get_params.sort {
-        SortOrder::DatePostedDesc => {
-            r#"
-            SELECT id, name, rating, note, posted_at_utc
-            FROM guestbook_entries
-            ORDER BY posted_at_utc desc
-        "#
-        }
-        SortOrder::DatePostedAsc => {
-            r#"
-            SELECT id, name, rating, note, posted_at_utc
-            FROM guestbook_entries
-            ORDER BY posted_at_utc asc
-        "#
-        }
-        SortOrder::NameDesc => {
-            r#"
-            SELECT id, name, rating, note, posted_at_utc
-            FROM guestbook_entries
-            ORDER BY name desc
-        "#
-        }
-        SortOrder::NameAsc => {
-            r#"
-            SELECT id, name, rating, note, posted_at_utc
-            FROM guestbook_entries
-            ORDER BY name asc
-        "#
-        }
+    let order_by = match get_params.sort {
+        SortOrder::DatePostedDesc => "posted_at_utc DESC, id",
+        SortOrder::DatePostedAsc => "posted_at_utc ASC, id",
+        SortOrder::NameDesc => "name DESC, id",
+        SortOrder::NameAsc => "name ASC, id",
     };
 
-    let entries = sqlx::query_as::<_, PubGuestbookEntry>(query)
+    let query = format!(
+        r#"
+        SELECT id, name, rating, note, posted_at_utc
+        FROM guestbook_entries
+        ORDER BY {order_by}
+        LIMIT ?1 OFFSET ?2
+        "#
+    );
+
+    // SQLite treats a negative LIMIT as "no limit"
+    let entries = sqlx::query_as::<_, PubGuestbookEntry>(&query)
+        .bind(get_params.limit.unwrap_or(-1))
+        .bind(get_params.offset.unwrap_or(0).max(0))
         .fetch_all(pool)
         .await?;
 
-    Ok(GetEntriesResponse { entries })
+    let total: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM guestbook_entries")
+        .fetch_one(pool)
+        .await?;
+
+    Ok(GetEntriesResponse { entries, total })
 }
 
 pub async fn entry_by_id(

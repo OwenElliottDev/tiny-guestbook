@@ -197,6 +197,31 @@ a.button-link:hover {
 }
 
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.pagination[hidden] {
+    display: none;
+}
+
+#page-info {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.pagination button:disabled {
+    background: var(--border);
+    color: var(--muted);
+    cursor: default;
+    transform: none;
+}
+
+
 .review-container {
     background: var(--surface);
     padding: 2rem;

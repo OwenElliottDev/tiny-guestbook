@@ -47,6 +47,7 @@ pub struct GetEntriesRequest {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetEntriesResponse {
     pub entries: Vec<PubGuestbookEntry>,
+    pub total: i64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
