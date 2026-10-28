@@ -1,3 +1,10 @@
+FROM node:22-slim AS assets
+WORKDIR /usr/src/app
+RUN npm install -g html-minifier-terser@7.2.0 terser@5.51.2 lightningcss-cli@1.33.0
+COPY minify.sh .
+COPY static/ static/
+RUN ./minify.sh -o dist static
+
 FROM rust:1 AS builder
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y musl-tools
@@ -29,5 +36,5 @@ RUN if [ -z "$TARGETPLATFORM" ]; then \
 FROM scratch
 WORKDIR /app
 COPY --from=builder /usr/src/app/target/*/release/guestbook .
-COPY static/ static/
+COPY --from=assets /usr/src/app/dist/ static/
 ENTRYPOINT ["./guestbook"]
