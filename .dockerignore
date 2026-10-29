@@ -6,3 +6,5 @@ README.md
 LICENCE
 Dockerfile
 readme_assets/
+dist/
+**/.DS_Store
