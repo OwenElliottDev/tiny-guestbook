@@ -57,3 +57,6 @@ pub struct IdRequest {
 
 #[derive(Clone)]
 pub struct ApiKey(pub Option<String>);
+
+#[derive(Clone)]
+pub struct StaticDir(pub String);
